@@ -1,0 +1,27 @@
+{
+  "name": "trip-concierge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
+    "chrono-node": "^2.10.3",
+    "idb-keyval": "^6.3.0",
+    "pdfjs-dist": "^6.4.299",
+    "preact": "^11.0.1",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "vite": "^8.3.4"
+  },
+  "type": "module"
+}
