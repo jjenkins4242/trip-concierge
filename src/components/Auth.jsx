@@ -3,7 +3,7 @@ import { supabase, errMsg } from '../lib/supabase.js';
 import { Icon } from './ui.jsx';
 
 export function Auth({ inviteCode }) {
-  const [mode, setMode] = useState(inviteCode ? 'join' : 'signin');
+  const [mode, setMode] = useState(() => { try { return localStorage.getItem('tc.hasAccount') ? 'signin' : 'join'; } catch { return 'join'; } });
   const [f, setF] = useState({ name: '', email: '', password: '', code: inviteCode || '' });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -19,9 +19,10 @@ export function Auth({ inviteCode }) {
       }
       const { error } = await supabase.auth.signInWithPassword({ email: f.email.trim().toLowerCase(), password: f.password });
       if (error) throw error;
+      try { localStorage.setItem('tc.hasAccount', '1'); } catch {}
     } catch (e2) {
       const m = errMsg(e2);
-      setErr(/invalid login/i.test(m) ? 'Email or password doesn\'t match.' : m);
+      setErr(/invalid login/i.test(m) ? (mode === 'signin' ? 'No account matches that email and password. First time here? Tap "Create account" above.' : 'Account created, but sign-in failed. Try Sign in.') : m);
     } finally { setBusy(false); }
   }
 
@@ -34,7 +35,7 @@ export function Auth({ inviteCode }) {
       </div>
       <form class="card auth-card" onSubmit={submit}>
         <div class="seg">
-          <button type="button" class={mode === 'join' ? 'on' : ''} onClick={() => setMode('join')}>I have an invite code</button>
+          <button type="button" class={mode === 'join' ? 'on' : ''} onClick={() => setMode('join')}>Create account</button>
           <button type="button" class={mode === 'signin' ? 'on' : ''} onClick={() => setMode('signin')}>Sign in</button>
         </div>
         {mode === 'join' && (
